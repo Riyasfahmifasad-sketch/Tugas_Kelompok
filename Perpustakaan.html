@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan Sederhana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #2d3e50;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2d3e50;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fafafa;
+            margin-bottom: 12px;
+            padding: 16px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .add-book {
+            margin-bottom: 24px;
+        }
+        input, button {
+            padding: 8px;
+            margin-right: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #2d3e50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #e67e22;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Perpustakaan Sederhana</h1>
+        <img src="https://fh.unmul.ac.id/upload/img/arsip/a_Z5g2QAeps8y.jpg" alt="Gambar Perpustakaan" style="width:200px; height:auto; margin-top:10px;">
+        <button id="lihatDaftarBuku" style="margin:15px auto 0;display:block;padding:8px 18px;font-size:16px;border-radius:6px;border:none;background:#e67e22;color:#fff;cursor:pointer;">Lihat Daftar Buku</button>
+        <p>Daftar buku dan tambah buku baru</p>
+    </header>
+    <div class="container">
+        <div class="add-book">
+            <input type="text" id="judul" placeholder="Judul Buku">
+            <input type="text" id="penulis" placeholder="Penulis">
+            <button onclick="tambahBuku()">Tambah Buku</button>
+        </div>
+        <h2 id="judulDaftarBuku">Daftar Buku</h2>
+        <ul id="daftarBuku"></ul>
+    </div>
+    <script type="module">
+        import { tambahBuku } from './main.js';
+
+        // Class Buku
+        class Buku {
+            constructor(judul, penulis) {
+                this.judul = judul;
+                this.penulis = penulis;
+            }
+        }
+
+        // Class Perpustakaan
+        class Perpustakaan {
+            constructor() {
+                this.bukuList = [];
+            }
+            tambah(buku) {
+                this.bukuList.push(buku);
+            }
+            getAll() {
+                return this.bukuList;
+            }
+        }
+
+        // Inisialisasi perpustakaan
+        const perpustakaan = new Perpustakaan();
+
+        // Fungsi untuk menampilkan daftar buku
+        function tampilkanBuku() {
+            const daftarBuku = document.getElementById('daftarBuku');
+            daftarBuku.innerHTML = '';
+            perpustakaan.getAll().forEach((buku, idx) => {
+                const li = document.createElement('li');
+                li.textContent = `${idx+1}. ${buku.judul} - ${buku.penulis}`;
+                daftarBuku.appendChild(li);
+            });
+        }
+
+        // Fungsi untuk menambah buku
+        window.tambahBuku = function() {
+            const judul = document.getElementById('judul').value.trim();
+            const penulis = document.getElementById('penulis').value.trim();
+            if (tambahBuku(judul, penulis, perpustakaan, tampilkanBuku)) {
+                document.getElementById('judul').value = '';
+                document.getElementById('penulis').value = '';
+            }
+        }
+
+        // Scroll ke daftar buku saat tombol diklik
+        document.getElementById('lihatDaftarBuku').onclick = function() {
+            document.getElementById('judulDaftarBuku').scrollIntoView({behavior: 'smooth'});
+        };
+
+        // Tambahkan beberapa buku awal
+        perpustakaan.tambah(new Buku('Laskar Pelangi', 'Andrea Hirata'));
+        perpustakaan.tambah(new Buku('Bumi Manusia', 'Pramoedya Ananta Toer'));
+        perpustakaan.tambah(new Buku('Sang Tirani', 'Riyas'));
+        tampilkanBuku();
+    </script>
+</body>
+</html>

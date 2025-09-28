@@ -1,24 +1,33 @@
-// Hubungkan tombol di perpustakaan.html dengan fungsi di file ini
-export function tampilkanBuku() {
-    const daftar = document.gtampilkanBuku('judulDaftarBuku');
-    if (daftar) {
-        daftar.scrollIntoView({behavior: 'smooth'});
-    }
+//fungsi untuk scroll ke daftar buku
+export function scrollKeDaftarBuku() {
+  const daftar = document.getElementById('judulDaftarBuku');
+  if (daftar) {
+    daftar.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
-// Fungsi untuk menambah buku, cek duplikat
+//fungsi untuk menambah buku
 export function tambahBuku(judul, penulis, perpustakaan, tampilkanBuku) {
-    if (!judul || !penulis) return;
-    // Cek apakah buku sudah ada
-    const sudahAda = perpustakaan.getAll().some(buku => 
-        buku.judul.toLowerCase() === judul.toLowerCase() && buku.penulis.toLowerCase() === penulis.toLowerCase()
-    );
-    if (sudahAda) {
-        alert('Buku dengan judul dan penulis yang sama sudah ada!');
-        return false;
-    }
-    const bukuBaru = new Buku(judul, penulis);
-    perpustakaan.tambah(bukuBaru);
-    tampilkanBuku();
-    return true;
+  // Validasi input
+  if (!judul || !penulis) return false;
+
+  //cek duplikat judul + penulis
+  const sudahAda = perpustakaan.getAll().some(buku =>
+    buku.judul.toLowerCase() === judul.toLowerCase() &&
+    buku.penulis.toLowerCase() === penulis.toLowerCase()
+  );
+
+  if (sudahAda) {
+    alert('Buku dengan judul dan penulis yang sama sudah ada!');
+    return false;
+  }
+
+  //buku baru dengan status tersedia
+  const bukuBaru = { judul, penulis, status: 'tersedia' };
+
+  //tambahkan ke perpustakaan & tampilkan
+  perpustakaan.tambah(bukuBaru);
+  tampilkanBuku();
+
+  return true;
 }
